@@ -14,24 +14,17 @@ export function NotesList() {
   const { data: notes, loading, error } = useCollection(notesCollection, where('uid', '==', user?.uid ?? ''))
 
   if (loading) return <LoadingSpinner />
+  if (error) return <div className="text-sm text-red-500">Error: {error.message}</div>
+  if (notes.length === 0) return <EmptyState title="No notes yet" />
 
   return (
-    <div>
-      <pre className="text-xs bg-zinc-100 p-2 rounded mb-4">
-        {JSON.stringify({ uid: user?.uid, emailVerified: user?.emailVerified }, null, 2)}
-      </pre>
-      {error && <div className="text-sm text-red-500">Error: {error.message}</div>}
-      {!error && notes.length === 0 && <EmptyState title="No notes yet" />}
-      {!error && notes.length > 0 && (
-        <ul className="space-y-2">
-          {notes.map((note) => (
-            <li key={note.id} className="rounded-lg border p-4">
-              <h3 className="font-medium">{note.title}</h3>
-              <p className="text-sm text-zinc-500">{note.body}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <ul className="space-y-2">
+      {notes.map((note) => (
+        <li key={note.id} className="rounded-lg border p-4">
+          <h3 className="font-medium">{note.title}</h3>
+          <p className="text-sm text-zinc-500">{note.body}</p>
+        </li>
+      ))}
+    </ul>
   )
 }
