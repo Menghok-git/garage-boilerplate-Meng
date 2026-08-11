@@ -33,4 +33,8 @@ function lazyProxy<T extends object>(factory: () => T): T {
 }
 
 export const adminAuth: Auth = lazyProxy(() => getAuth(getAdminApp()))
-export const adminDb: Firestore = lazyProxy(() => getFirestore(getAdminApp()))
+export const adminDb: Firestore = lazyProxy(() => {
+  const db = getFirestore(getAdminApp())
+  db.settings({ preferRest: true })
+  return db
+})
